@@ -16,12 +16,11 @@ export const FeedbackProvider = ({children}) => {
       text: 'This other item is from the context too.',
       rating: 5    }
   ])
+
   const [ feedbackEdit, setFeedbackEdit ] = useState({
     item: {},
     edit: false
   })
-
-  const [selectedRating, setSelectedRating] = useState()
 
   // Add feedback
   const addFeedback = (newFeedback) => {
@@ -57,7 +56,6 @@ export const FeedbackProvider = ({children}) => {
   return <FeedbackContext.Provider value={{
     feedback,
     feedbackEdit,
-    selectedRating,
     deleteFeedback,
     addFeedback,
     editFeedback,
