@@ -6,11 +6,20 @@ import FeedbackContext from "../context/FeedbackContext"
 
 function FeedbackForm() {
   const [text, setText] = useState('')
-  const [rating, setRating] = useState('')
+  const [rating, setRating] = useState()
   const [btnDisabled, setBtnDisabled] = useState(true)
-  const [message, setMessage] = useState('')
+  const [message1, setMessage1] = useState('')
+  const [message2, setMessage2] = useState('')
 
   const { addFeedback, feedbackEdit, updateFeedback } = useContext(FeedbackContext)
+
+  useEffect (() => {
+    if(rating === undefined) {
+      setMessage2('Please select a rating.')
+    } else {
+      setMessage2('')
+    }
+  }, [rating])
 
   useEffect (() => {
     if(feedbackEdit.edit === true) {
@@ -21,14 +30,16 @@ function FeedbackForm() {
   }, [feedbackEdit])
 
   const handleTextChange = (e) => {
-    if(text === '') {
+    console.log(typeof rating, rating)
+    
+    if(text === '' ) {
       setBtnDisabled(true)
-      setMessage(null)
-    } else if (text !== '' && text.trim().length <=10) {
+      setMessage1(null)
+    } else if (text !== '' && text.trim().length <= 5) {
       setBtnDisabled(true)
-      setMessage('Text must be at least 10 characters.')
+      setMessage1('Text must be at least 5 characters.')
     } else {
-      setMessage(null)
+      setMessage1(null)
       setBtnDisabled(false)
     }
     setText(e.target.value)
@@ -36,17 +47,21 @@ function FeedbackForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if(text.trim().length > 10) {
-      const newFeedback = {
-        text,
-        rating
+    if(rating === undefined) {
+      setMessage2('Please select a rating.')
+    } else {
+      if(text.trim().length > 5) {
+        const newFeedback = {
+          text,
+          rating
+        }
+        if(feedbackEdit.edit === true) {
+          updateFeedback(feedbackEdit.item.id, newFeedback)
+        } else {
+          addFeedback(newFeedback)
+        }
+        setText('')
       }
-      if(feedbackEdit.edit === true) {
-        updateFeedback(feedbackEdit.item.id, newFeedback)
-      } else {
-        addFeedback(newFeedback)
-      }
-      setText('')
     }
   }
 
@@ -65,7 +80,8 @@ function FeedbackForm() {
           <Button type="submit" isDisabled={btnDisabled}>{feedbackEdit.edit ? 'Update' : 'Send'}</Button>
         </div>
 
-        {message && <div className="message">{message}</div>}
+        {message1 && <div className="message">{message1}</div>}
+        {message2 && <div className="message">{message2}</div>}
       </form>
     </Card>
   )
