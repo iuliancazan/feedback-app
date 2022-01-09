@@ -62,7 +62,7 @@ function FeedbackForm() {
             placeholder='Write a review'
             value={text} 
             />
-          <Button type="submit" isDisabled={btnDisabled}>Send</Button>
+          <Button type="submit" isDisabled={btnDisabled}>{feedbackEdit.edit ? 'Update' : 'Send'}</Button>
         </div>
 
         {message && <div className="message">{message}</div>}
